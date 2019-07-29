@@ -5,3 +5,27 @@
 
 # 安裝
 
+### Anaconda
+
+python: 3.6.x
+可使用anaconda進行環境及套件的安裝
+
+### Docker
+
+Dokcer file 待補
+
+# 網頁伺服器
+
+python flask
+
+# 路線規劃
+
+open route service
+
+# 前端地圖框架
+
+leaflet
+
+# 空間分析
+
+python geopandas
