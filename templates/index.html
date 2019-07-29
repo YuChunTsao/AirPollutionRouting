@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Air Pollution Exposure</title>
+    <meta charset="utf-8">
+    <meta author="YuChun Tsao">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <!-- js -->
+    <script type="text/javascript" src="./static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="./static/js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="./static/js/sweetalert.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+    <script src="./static/js/leaflet-providers.js"></script>
+    <script src="./static/js/map.js"></script>
+
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="./static/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./static/css/sweetalert.css">
+    <link rel="stylesheet" type="text/css" href="./static/css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
+</head>
+
+<body>
+    <div id='loading-page'>
+        <div class="loader"></div>
+        <BR><div class="text-center"><h3>計算中...</h3></div>
+    </div>
+    <div class="row">
+        <div id="map"></div>
+    </div>
+
+    <div class="row interact-panel-control align-self-center">
+        <div class="col align-self-center" style="text-align: center;">
+            <button id="direction-request" type="button" class="btn btn-primary">路線規劃</button>
+        </div>
+        <div class="col align-self-center" style="text-align: center;">
+            <button id="request-result" type="button" class="btn btn-primary">請求結果</button>
+        </div>
+    </div>
+    <div class="container-fluid">
+            <div class="row">
+                <div class="card interact-panel" id="direction-panel">
+                    <div class="card-body">
+                        <h6 class="card-title text-center" style='font-weight: bolder;'>路線請求</h6>
+                        <div class="row">
+                            <div class="col-12">
+                                <input id="origin-input" class="controls" type="text" placeholder="路線起點">
+                                <input id="destination-input" class="controls" type="text" placeholder="路線終點">
+    
+                                <div id="mode-selector" class="controls">
+                                    <input type="radio" name="type" id="changemode-foot-walking" checked="checked">
+                                    <label for="changemode-foot-walking">步行</label>
+    
+                                    <input type="radio" name="type" id="changemode-cycling-regular">
+                                    <label for="changemode-cycling-regular">腳踏車</label>
+    
+                                    <input type="radio" name="type" id="changemode-driving-car">
+                                    <label for="changemode-driving-car">機車</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button id="direction-submit" type="button" class="btn btn-primary">送出</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card interact-panel" id="result-panel">
+                    <div class="card-body">
+                        <h6 class="card-title text-center" style='font-weight: bolder;'>請求結果</h6>
+                        <div class="table-responsive" style='height: 25vh; width: 90vw; overflow: auto;'>
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col"></th>
+                                        <th scope="col">總暴露量(ug)</th>
+                                        <th scope="col">平均暴露量(ug/m3)</th>
+                                        <th scope="col">距離(m)</th>
+                                        <th scope="col">時間(s)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id='route-table-tb'>
+    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+  
+</body>
+<script>
+    window.onload = function () {
+        initMap();
+        new DirectionsHandler();
+    }
+
+    // 介面控制
+    document.getElementById('direction-request').addEventListener('click', (e) => {
+        
+        let resultIsOpen = document.getElementById('result-panel').style.display;
+        let directionIsOpen = document.getElementById('direction-panel').style.display;
+        
+        $("#result-panel").hide();
+        $("#direction-panel").slideToggle("slow", function () {
+            if ((resultIsOpen == "none" || resultIsOpen == "") && (directionIsOpen == "none" || directionIsOpen == "")) {
+                document.getElementById('map').style.height = '50%';
+            }
+
+            if ((resultIsOpen == "none" || resultIsOpen == "") && directionIsOpen == "block") {
+                document.getElementById('map').style.height = '90%';
+            }
+        })
+    });
+        
+
+    document.getElementById('request-result').addEventListener('click', (e) => {
+        let resultIsOpen = document.getElementById('result-panel').style.display;
+        let directionIsOpen = document.getElementById('direction-panel').style.display;
+        
+        $("#direction-panel").hide();
+        $("#result-panel").slideToggle("slow", function () {
+            if ((resultIsOpen == "none" || resultIsOpen == "") && (directionIsOpen == "none" || directionIsOpen == "")) {
+                document.getElementById('map').style.height = '50%';
+            }
+
+            if (resultIsOpen == "block" && (directionIsOpen == "none" || directionIsOpen == "")) {
+                document.getElementById('map').style.height = '90%';
+            }
+        })
+    });
+</script>
+
+</html>
